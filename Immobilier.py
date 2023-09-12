@@ -9,7 +9,7 @@ import urllib.request
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn import model_selection
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn import metrics
 
 dirname = os.path.dirname(os.path.abspath(__file__))
 DEPARTEMENT = "34"
@@ -18,6 +18,7 @@ TYPE = "Maison"
 MUTATION = "Vente"
 MAX_PRICE = 1500000
 MAX_SURFACE = 250
+COMP_SURFACE = int(input("Quelle est la surface du logement à comparer ?"))
 
 def download(annee, department = DEPARTEMENT):
     """
@@ -34,7 +35,7 @@ def download(annee, department = DEPARTEMENT):
     #if data not available -> pass 
 
 # Download loop fetching data from the last 5 years
-years = {}
+years = {}  
 for i in range(5):
     #if data not available -> décaler à l'année antérieure
     currentDateTime = datetime.datetime.now()
@@ -59,6 +60,9 @@ df = df[(df.type_local == TYPE) & (df.nom_commune == CITY) &
          (df.nature_mutation == MUTATION) &
           (df.valeur_fonciere < MAX_PRICE) & (df.surface_reelle_bati < MAX_SURFACE)]
 
+# Check NaN
+print(df.isnull().sum())
+
 # Remove duplicates basing on id
 df = df.drop_duplicates(subset=['id_mutation'], keep='first')
 df = df.dropna()
@@ -78,6 +82,9 @@ lr = linear_model.LinearRegression()
 lr_baseline = lr.fit(X_train[['surface_reelle_bati']], y_train)
 baseline_pred = lr_baseline.predict(X_test[['surface_reelle_bati']])
 
+#
+#df[['garden']] = 
+
 def sumsq(x,y):
     return sum((x - y)**2)
 
@@ -86,9 +93,18 @@ def r2score(pred, target):
 
 score_bl = r2score(baseline_pred[:,0], y_test['valeur_fonciere'])
 
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, baseline_pred))  
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, baseline_pred))  
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, baseline_pred)))
+
+lr_baseline.get_params()
+loyer_theorique = round(lr_baseline.coef_[0][0] * COMP_SURFACE + lr_baseline.intercept_[0],2)
+print(loyer_theorique)
+
 plt.plot(X_test[["surface_reelle_bati"]], y_test, 'ro', markersize = 5)
 plt.plot(X_test[["surface_reelle_bati"]], baseline_pred, color="coral", linewidth = 2)
 plt.title('R²: ' + str(round(score_bl,2)))
+plt.plot(COMP_SURFACE, loyer_theorique, color="blue")
 plt.show()
 print(score_bl)
 
