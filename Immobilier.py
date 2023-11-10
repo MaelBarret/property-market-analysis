@@ -32,7 +32,7 @@ def download(annee, department = DEPARTEMENT):
                 file_content = uncompressed.read()
         with open(filename, 'wb') as f:
             f.write(file_content)
-    #if data not available -> pass 
+    #if data not available -> pass
 
 # Download loop fetching data from the last 5 years
 years = {}  
@@ -81,9 +81,6 @@ X_train, X_test, y_train, y_test = \
 lr = linear_model.LinearRegression()
 lr_baseline = lr.fit(X_train[['surface_reelle_bati']], y_train)
 baseline_pred = lr_baseline.predict(X_test[['surface_reelle_bati']])
-
-#
-#df[['garden']] = 
 
 def sumsq(x,y):
     return sum((x - y)**2)
