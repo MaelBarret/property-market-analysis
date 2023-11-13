@@ -1,6 +1,6 @@
 # property-market-analysis
 
-Simple French property market analysis using Python, ploting data of a specified area and processing a simple linear regression.
+A simple French property market analysis using Python, ploting data of a specified area and processing a simple linear regression.
 
 Fetch data from https://files.data.gouv.fr.
 
