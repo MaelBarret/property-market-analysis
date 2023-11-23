@@ -4,4 +4,4 @@ A simple French property market analysis using Python, ploting data of a specifi
 
 Fetch data from https://files.data.gouv.fr.
 
-Still to be finished. Code need to be generalized to be used with user interface.
+Still to be finished. Code need to be generalized in order to be used with user interface.
